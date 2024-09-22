@@ -25,7 +25,7 @@
 //                        3- receive data from a server - after the page has loaded
 //                        4- send data to a server - in the background
 
-var http = new XMLHttpRequest(); // creat an object has all the functions in XMLHttpRequest()
+// var http = new XMLHttpRequest(); // creat an object has all the functions in XMLHttpRequest()
 // http.open(method,API) // open a connection between the clint and DB, and it takes 2 parameters
 //                                                       !  the first one is a method:
 //                                                          1- GET    ===> get data
@@ -34,27 +34,27 @@ var http = new XMLHttpRequest(); // creat an object has all the functions in XML
 //                                                          4- DELETE ===>  delete data
 //                                                          5- PATCH  ===>  update "but not all the data"  not recommended
 //                                                       !  the second one is a API:
-http.open("GET", "https://ecommerce.routemisr.com/api/v1/categories");
-http.send(); // send request to DB
-console.log(http.response); // here we wont see anythig in console cuz open() and send() takes time,
+// http.open("GET", "https://ecommerce.routemisr.com/api/v1/categories");
+// http.send(); // send request to DB
+// console.log(http.response); // here we wont see anythig in console cuz open() and send() takes time,
 //                           so JS let them and complete the code so we have to make JS wait for it like this:
 // http.addEventListener("load", function(){
 //     console.log(JSON.parse(http.response)) // convert it to JSON [{},{},...]
 // })
 
-http.readyState; // status of request ===> 0 ==> connection not init
+// http.readyState; // status of request ===> 0 ==> connection not init
 //                                        1 ==> connection establish
 //                                        2 ==> request received
 //                                        3 ==> request proccessing
 //                                        4 ==> request finished and data is ready
-http.addEventListener("readystatechange", function () {
-  if (http.readyState == 4) {
-    console.log(JSON.parse(http.response));
-  }
-});
-http.addEventListener("error", function () {
-  alert("error");
-});
+// http.addEventListener("readystatechange", function () {
+//   if (http.readyState == 4) {
+//     console.log(JSON.parse(http.response));
+//   }
+// });
+// http.addEventListener("error", function () {
+//   alert("error");
+// });
 
 //TODO                Excution Stack                            Web API                              Message Queue
 /**
@@ -66,6 +66,43 @@ http.addEventListener("error", function () {
  * ?                 AND THEN THERE IS CONNECTION BETWEEN "EXCUTION STACK" AND "MESSAGE QUEUE" CALLED `EVENT LOOP`
  * ?                             TAKES THE FIRST ONES IN "MESSAGE QUEUE" AND PUT IT IN "EXCUTION STACK"
  */
+
+function getPizza(resolved) {
+  var http = new XMLHttpRequest();
+  http.open("GET", "https://forkify-api.herokuapp.com/api/search?q=pizza");
+  http.send();
+  http.addEventListener("load", function () {
+    console.log(JSON.parse(http.response));
+    resolved();
+  });
+  http.addEventListener('error', function(){
+    alert("not found")
+  })
+}
+function getBeef(resolved) {
+  var http = new XMLHttpRequest();
+  http.open("GET", "https://forkify-api.herokuapp.com/api/search?q=beef");
+  http.send();
+  http.addEventListener("load", function () {
+    console.log(JSON.parse(http.response));
+    resolved();
+  });
+  http.addEventListener('error', function(){
+    alert("not found")
+  })
+}
+function getPasta(resolved) {
+  var http = new XMLHttpRequest();
+  http.open("GET", "https://forkify-api.herokuapp.com/api/search?q=pasta");
+  http.send();
+  http.addEventListener("load", function () {
+    console.log(JSON.parse(http.response));
+    resolved();
+  });
+  http.addEventListener('error', function(){
+    alert("not found")
+  })
+}
 
 /**
  * *  if u wanna control who will be the first and the second... there r 3 ways:
@@ -108,3 +145,66 @@ one(function () {
 });
 
  */
+/**
+ * try {
+  var x = 10;
+  console.log(x);
+  throw new Error("data is not here");
+} catch (error) {
+  alert(error);
+}finally{
+  console.log("hiii");
+  
+}
+ */
+
+//// ? PROMISE :
+// *  promise status: pending - fulfill - rejected
+
+// function one() {
+//   return new Promise(function (resolved, rejected) {
+//     console.log("one");
+//     var error = true;
+//     if (error == true) {
+//       resolved();
+//     } else rejected();
+//   });
+// }
+// function two() {
+//   return new Promise(function (resolved) {
+//     console.log("two");
+//     resolved();
+//   });
+// }
+
+// function three() {
+//   return new Promise(function (resolved) {
+//     console.log("three");
+//     resolved();
+//   });
+// }
+
+// function four() {
+//   return new Promise(function (resolved) {
+//     console.log("four");
+//     resolved();
+//   });
+// }
+// function final() {
+//   console.log("final");
+// }
+
+// one()
+//   .then(function () {
+//     return three();
+//   }) // callback = function(){ return three() }
+//   .then(function () {
+//     return four();
+//   }) // callback = function(){ return four() }
+//   .then(two)
+//   .catch(function () {
+//     console.log("errrrr");
+//   });
+//  Promise.all([one, three, four]).then(function(){console.log("aaa");
+//  })
+// one().then(two().then(four().then(three)));
