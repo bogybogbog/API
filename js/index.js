@@ -63,47 +63,67 @@
  * !                                                           setTimeOut                              here first
  * !                                                             events
  *
- * ?                 AND THEN THERE IS CONNECTION BETWEEN "EXCUTION STACK" AND "MESSAGE QUEUE" CALLED `EVENT LOOP`
- * ?                             TAKES THE FIRST ONES IN "MESSAGE QUEUE" AND PUT IT IN "EXCUTION STACK"
+ * ?                    AND THEN THERE IS CONNECTION BETWEEN "EXCUTION STACK" AND "MESSAGE QUEUE" CALLED `EVENT LOOP`
+ * ?                              TAKES THE FIRST ONES IN "MESSAGE QUEUE" AND PUT IT IN "EXCUTION STACK"
  */
 
-function getPizza(resolved) {
-  var http = new XMLHttpRequest();
-  http.open("GET", "https://forkify-api.herokuapp.com/api/search?q=pizza");
-  http.send();
-  http.addEventListener("load", function () {
-    console.log(JSON.parse(http.response));
-    resolved();
+function getPizza() {
+  return new Promise(function (resolved, rejected) {
+    var http = new XMLHttpRequest();
+    http.open("GET", "https://forkify-api.herokuapp.com/api/search?q=pizza");
+    http.send();
+    http.addEventListener("load", function () {
+      console.log("pizza", JSON.parse(http.response).recipes);
+      resolved();
+    });
+    http.addEventListener("error", function () {
+      rejected("pizza errrrrrrrrr");
+    });
   });
-  http.addEventListener('error', function(){
-    alert("not found")
-  })
-}
-function getBeef(resolved) {
-  var http = new XMLHttpRequest();
-  http.open("GET", "https://forkify-api.herokuapp.com/api/search?q=beef");
-  http.send();
-  http.addEventListener("load", function () {
-    console.log(JSON.parse(http.response));
-    resolved();
-  });
-  http.addEventListener('error', function(){
-    alert("not found")
-  })
-}
-function getPasta(resolved) {
-  var http = new XMLHttpRequest();
-  http.open("GET", "https://forkify-api.herokuapp.com/api/search?q=pasta");
-  http.send();
-  http.addEventListener("load", function () {
-    console.log(JSON.parse(http.response));
-    resolved();
-  });
-  http.addEventListener('error', function(){
-    alert("not found")
-  })
 }
 
+function getBeef() {
+  return new Promise(function (resolved, rejected) {
+    var http = new XMLHttpRequest();
+    http.open("GET", "https://forkify-api.herokuapp.com/api/search?q=beef");
+    http.send();
+    http.addEventListener("load", function () {
+      console.log("beef", JSON.parse(http.response).recipes);
+      resolved();
+    });
+    http.addEventListener("error", function () {
+      alert("not found");
+      rejected("beef errrrrrrr");
+    });
+  });
+}
+function getPasta() {
+  return new Promise(function (resolved, rejected) {
+    var http = new XMLHttpRequest();
+    http.open("GET", "https://forkify-api.herokuapp.com/api/search?q=pasta");
+    http.send();
+    http.addEventListener("load", function () {
+      console.log("pasta", JSON.parse(http.response).recipes);
+      resolved();
+    });
+    http.addEventListener("error", function () {
+      alert("not found");
+      rejected("pasta errrrrrrrrrr");
+    });
+  });
+}
+getPizza()
+  .then(function () {
+    return getBeef();
+  })
+  .then(getPasta)
+  .catch(function (msg) {
+    console.log(msg);
+  })
+  .finally(function () { // doing the good if the then is ok and even there is an error
+    console.log("funallyy");
+  });
+// getBeef().then(getPasta().then(getPizza));
 /**
  * *  if u wanna control who will be the first and the second... there r 3 ways:
  * ?  1- callback
@@ -161,50 +181,52 @@ one(function () {
 //// ? PROMISE :
 // *  promise status: pending - fulfill - rejected
 
-// function one() {
-//   return new Promise(function (resolved, rejected) {
-//     console.log("one");
-//     var error = true;
-//     if (error == true) {
-//       resolved();
-//     } else rejected();
-//   });
-// }
-// function two() {
-//   return new Promise(function (resolved) {
-//     console.log("two");
-//     resolved();
-//   });
-// }
+/**
+ * function one() {
+  return new Promise(function (resolved, rejected) {
+    console.log("one");
+    var error = true;
+    if (error == true) {
+      resolved();
+    } else rejected();
+  });
+}
+function two() {
+  return new Promise(function (resolved) {
+    console.log("two");
+    resolved();
+  });
+}
 
-// function three() {
-//   return new Promise(function (resolved) {
-//     console.log("three");
-//     resolved();
-//   });
-// }
+function three() {
+  return new Promise(function (resolved) {
+    console.log("three");
+    resolved();
+  });
+}
 
-// function four() {
-//   return new Promise(function (resolved) {
-//     console.log("four");
-//     resolved();
-//   });
-// }
-// function final() {
-//   console.log("final");
-// }
+function four() {
+  return new Promise(function (resolved) {
+    console.log("four");
+    resolved();
+  });
+}
+function final() {
+  console.log("final");
+}
 
-// one()
-//   .then(function () {
-//     return three();
-//   }) // callback = function(){ return three() }
-//   .then(function () {
-//     return four();
-//   }) // callback = function(){ return four() }
-//   .then(two)
-//   .catch(function () {
-//     console.log("errrrr");
-//   });
-//  Promise.all([one, three, four]).then(function(){console.log("aaa");
-//  })
-// one().then(two().then(four().then(three)));
+one()
+  .then(function () {
+    return three();
+  }) // callback = function(){ return three() }
+  .then(function () {
+    return four();
+  }) // callback = function(){ return four() }
+  .then(two)
+  .catch(function () {
+    console.log("errrrr");
+  });
+ Promise.all([one, three, four]).then(function(){console.log("aaa");
+ })
+one().then(two().then(four().then(three)));
+ */
