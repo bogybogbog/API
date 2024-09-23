@@ -11,7 +11,7 @@
 */
 // !              HTMLCollection                                NodeList
 // ?            getElementByTagName()                        querySelectorAll()
-// ?        changes the elements "live"                doesnt change the element "not live"
+// ?        changes the elements "live"                doesnt change the element
 
 //  ANCHOR - API ====> Applacataion programming interface.   solving secutity and diff programming langauges "JSON" ==> [{},{},{}]
 // * "JSON", every programming lang can understand it and it can transfer the data between the clint and DB fast
@@ -126,18 +126,25 @@ one(function () {
 var meals = [];
 async function getRecipe(meal) {
   //// ! ASYNC AWAIT AND FETCH:
-
-  var res = await fetch(
-    `https://forkify-api.herokuapp.com/api/search?q=${meal}`,
-    {
-      method: "GET",
-    }
-  ); // the default value is GET so no need to write it
-  var data = await res.json();
-  // console.log(meal, data.recipes);
-  meals = data.recipes;
-  console.log(meals);
-  display(meals) 
+  try {
+    var res = await fetch(
+      `https://forkify-api.herokuapp.com/api/search?q=${meal}`,
+      {
+        method: "GET", cache: "default"
+      }
+    ); // the default value is GET so no need to write it
+    var data = await res.json();
+    // console.log(meal, data.recipes);
+    meals = data.recipes;
+    console.log(meals);
+    display(meals);
+  } catch (err) {
+    document.getElementById(
+      "row"
+    ).innerHTML = `<div class="vh-100 d-flex justify-content-center align-items-center">
+          <h1 class="alert alert-danger">there is error connection</h1>
+        </div>`;
+  }
 
   /**
  *   .then(function (res) {
@@ -166,7 +173,7 @@ async function getRecipe(meal) {
   });
   */
 }
-getRecipe("beef");
+getRecipe("pizza");
 
 function display(arr) {
   var cartona = "";
@@ -174,7 +181,10 @@ function display(arr) {
     cartona += `        
     <div class="col-md-2">
         <div class="meal">
-            <h2>${arr[i].title}</h2>
+            <h2 class="fs-6 text-center">${arr[i].title
+              .split(" ")
+              .slice(0, 2)
+              .join(" ")}</h2>
             <img src="${arr[i].image_url}" alt="">
         </div>
     </div>`;
