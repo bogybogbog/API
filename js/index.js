@@ -225,7 +225,7 @@ function display(arr) {
 // }
 
 // async function getPasta() {
-//   //// ! ASYNC AWAIT AND FETCH:
+//// ! ASYNC AWAIT AND FETCH:
 //   var res = await fetch(
 //     `https://forkify-api.herokuapp.com/api/search?q=pasta`,
 //     {
@@ -243,7 +243,7 @@ function display(arr) {
 //     });
 //    */
 
-//   //// ! PROMISE:
+//// ! PROMISE:
 //   /**
 //    *   return new Promise(function (resolved, rejected) {
 //     var http = new XMLHttpRequest();
